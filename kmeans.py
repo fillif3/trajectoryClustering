@@ -7,10 +7,19 @@ import matplotlib.pyplot as plt
 def dist(X,Y):
     l = int(len(X)/2)
     dist=0
-    for i in range(l):
-        dist=dist+((X[i]-Y[i])**2+(X[i+l]-Y[i+l])**2)**(0.5)
+    XX = X[::l]
+    XY = X[l::]
+    YX = Y[::l]
+    YY = Y[l::]
+    XD = XX-YX
+    YD = XY-YY
+    D = np.sqrt(XD**2 + YD**2)
+    return sum(D)
+    #for i in range(l):
+    #    dist=dist+((X[i]-Y[i])**2+(X[i+l]-Y[i+l])**2)**(0.5)
     #print(dist)
-    return dist
+    #return dist
+
 
 def pdToTraj(df):
     traj=np.array([])
@@ -130,6 +139,10 @@ trajectories = np.empty([1432,200])
 
 di=os.listdir('trajDiv')
 di.sort()
+#-5589.348863559757
+#-6197.033
+#6894.5869999999995
+#9591.904301181974
 for i,filename in enumerate(di):
     dira = "trajDiv/"+filename
     df = pd.read_csv(dira, header=0)
@@ -139,13 +152,16 @@ for i,filename in enumerate(di):
     #
     # df=pd.DataFrame(vec,columns=['x','y'])
     traj= pdToTraj(df)
+
     trajectories[i]=traj
     #plt.plot(trajectories[i][0:1000], trajectories[i][1000:2000])
     #plt.xlim(-7000, 15000)
     #plt.ylim(-7000, 15000)
     #plt.show()
+
+
 distances = np.loadtxt('distances.csv', delimiter=',')
-for value in range(2,200,1):
+for value in range(329,330,1):
 
     #clustering=KMeans(n_clusters=value).fit(trajectories)
     #clustering=KMeans(n_clusters=value).fit(trajectories)
@@ -153,16 +169,17 @@ for value in range(2,200,1):
     #saveText(clustering.labels_,value)
     #print(max(clustering.labels_))
     labels = readLabels("clusteringDivided/" + str(value) + ".txt", )
-    sil = calculateSiletter(distances,labels)
-    print('For '+str(value)+' clusters we have a score equal to '+ str(sil))
-    '''
+    #sil = calculateSiletter(distances,labels)
+    #print('For '+str(value)+' clusters we have a score equal to '+ str(sil))
 
-    labels=clustering.labels_
+
+    #labels=clustering.labels_
     colors = createColors(5)#max(labels)+1)
     d = max(labels)+1
     print(len(labels))
     #print(d)
     for j in range(d):
+
         #plt.figure()
         #plt.get_current_fig_manager().full_screen_toggle()  # toggle fullscreen mode
         for i in range(1431):
@@ -172,15 +189,14 @@ for value in range(2,200,1):
             #print(colors)
             #print(labels[i])
             if labels[i]==j:
-                #print(i)
+                print(i)
                 #print(len(trajectories))
                 #print(len(trajectories[i]))
-                #plt.plot(trajectories[i][0:1000],trajectories[i][1000:2000])
+                plt.plot(trajectories[i][0:100],trajectories[i][100:200])
         if True:#j%0==0 or j==(d-1):
             plt.xlim(-7000, 15000)
             plt.ylim(-7000, 15000)
-            plt.title(str(value)+"kmena")
+            plt.title(str(j)+"kmena")
+            #plt.savefig('figures/'+str(j)+"cluster for 329 clusters")
 
-
-            #plt.show()
-    '''
+            plt.show()

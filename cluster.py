@@ -114,6 +114,14 @@ class cluster:
             self.mean[i] = np.mean(points, axis=0)
             self.variance[i] = np.cov(np.array(points).transpose())
 
+            #print(points)
+            #print(self.variance )
+            #print(self.mean)
+            #print(len(self.trajectories))
+            #print(self.beta)
+            #input()
+
+
     @staticmethod
     def logValueOfGaussuan2D(mean, variance, value):
         # print(value)
@@ -145,3 +153,4 @@ class cluster:
             for traj in c.trajectories:
                 logLiklyhood=logLiklyhood+c.probabilityOfTrajInCluster(traj)
         return 2*k-2*logLiklyhood
+
